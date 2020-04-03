@@ -1,14 +1,14 @@
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.`Access-Control-Allow-Origin`
 import akka.http.scaladsl.server.{ExceptionHandler, HttpApp, RejectionHandler, Route}
-import api.CardListApi
+import api.{CardApi, CardListApi}
 import app.AppModule
 import domain.DomainModule
 import infrastructure.InfrastructureModule
 import lib.UseDB
 import scalikejdbc.config.DBs
 import scalikejdbc.{AutoSession, DBSession, SQL}
-import tables.TableFixtures
+import tables.Tables
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -18,7 +18,8 @@ object Main
 
     val setupSqls: Seq[SQL[_, _]] =
       Seq(
-        TableFixtures.cardList
+        Tables.cardList,
+        Tables.card
       )
 
     def setupSqlsBySession: Map[DBSession, Seq[SQL[_, _]]] = Map(AutoSession -> setupSqls)
@@ -80,7 +81,8 @@ object WebServer
 
       val route = {
         val mainRoutes: Route = {
-          new CardListApi(module).routes
+          new CardListApi(module).routes ~
+          new CardApi(module).routes
         }
 
         handleExceptions(exceptionHandler) {

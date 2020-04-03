@@ -11,12 +11,12 @@ trait WithInmemoryDB extends SuiteMixin with UseDB { this: Suite =>
     ConnectionPool.singleton(s"jdbc:h2:mem:test;MODE=MYSQL", "user", "pass")
 
     GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
-      enabled = false,
+      enabled = true,
       singleLineMode = true,
       printUnprocessedStackTrace = false,
       stackTraceDepth = 15,
-      logLevel = Symbol("info"),
-      warningEnabled = false,
+      logLevel = Symbol("debug"),
+      warningEnabled = true,
       warningThresholdMillis = 3000L,
       warningLogLevel = Symbol("warn"),
       maxColumnSize = Some(100),

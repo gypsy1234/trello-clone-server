@@ -1,9 +1,9 @@
-package domain.sercice.interpreter
+package domain.service.interpreter
 
 import java.util.UUID
 
 import domain.model.{CardList, CardListId, CardListRepository, CardListTitle}
-import domain.sercice.CardListService
+import domain.service.CardListService
 import lib.TypeAlias.ProcessResult
 import cats.instances.future._
 import lib.DBOperation

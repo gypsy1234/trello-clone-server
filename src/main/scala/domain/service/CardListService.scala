@@ -1,4 +1,4 @@
-package domain.sercice
+package domain.service
 
 import domain.model.CardListTitle
 import lib.DBOperation

@@ -2,7 +2,7 @@ package app.command
 
 import cats.instances.future._
 import domain.model.{CardList, CardListId, CardListTitle}
-import domain.sercice.CardListService
+import domain.service.CardListService
 import lib.DBContext
 import lib.TypeAlias.ProcessResult
 

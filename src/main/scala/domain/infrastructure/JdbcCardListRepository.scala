@@ -21,7 +21,7 @@ class JdbcCardListRepository
   import JdbcCardListRepository._
 
   override def store(list: CardList)(implicit dbOperation: DBOperation): ProcessResult[Unit] =
-    ProcessResult.success {
+    ProcessResult {
       exec { implicit s =>
         Try {
           applyUpdate {
@@ -34,6 +34,7 @@ class JdbcCardListRepository
               clCols.title -> list.title.value
             )
           }
+          ()
         }.toEither.leftMap { e => err(CardListPersistenceFailed(e))}
       }
     }
