@@ -3,6 +3,7 @@ package api
 import java.util.UUID
 
 import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.model.headers.{RawHeader, `Content-Location`}
 import akka.http.scaladsl.server.Route
 import api.CardListApi.{CardListPostInput, CardListPostOutput}
 import app.AppModule
@@ -26,9 +27,16 @@ class CardListApi(
     path("v1" / "card-lists") {
       post {
         entity(as[CardListPostInput]) { input =>
-          val result = cardListCommand.add(input.title)
-          response(result) { r =>
-            complete((StatusCodes.Created, CardListPostOutput(r.value)))
+          extractMatchedPath { matchedPath =>
+            val result = cardListCommand.add(input.title)
+            response(result) { r =>
+              respondWithHeaders(
+                `Content-Location`(s"$matchedPath/${r.value.toString}"),
+                RawHeader("Content-Type", "application/json")
+              ) {
+                complete((StatusCodes.Created, CardListPostOutput(r.value)))
+              }
+            }
           }
         }
       }
