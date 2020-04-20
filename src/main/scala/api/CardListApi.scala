@@ -47,7 +47,7 @@ class CardListApi(
       get {
         val result = cardListQuery.get(uuid)
         response(result) { r =>
-          complete((StatusCodes.Created, r))
+          complete((StatusCodes.OK, r))
         }
       }
     }
