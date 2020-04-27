@@ -3,6 +3,7 @@ import akka.http.scaladsl.model.headers.`Access-Control-Allow-Origin`
 import akka.http.scaladsl.server.{ExceptionHandler, HttpApp, RejectionHandler, Route}
 import api.{CardApi, CardListApi}
 import app.AppModule
+import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import domain.DomainModule
 import infrastructure.InfrastructureModule
 import lib.UseDB
@@ -67,17 +68,9 @@ object WebServer
           complete((StatusCodes.InternalServerError, e.getMessage))
       }
 
-      val rejectionHandler =
-        RejectionHandler.newBuilder()
-          .result()
-          // akka-httpの標準ディレクティブでエラーになると、
-          // CORSを許可するヘッダーが付与されずにCORSのエラーレスポンスがブラウザで正しく判定できないので
-          .mapRejectionResponse { res =>
-            res.copy(headers =
-              if (res.headers.exists(_.isInstanceOf[`Access-Control-Allow-Origin`])) res.headers
-              else res.headers :+ `Access-Control-Allow-Origin`.*
-            )
-          }
+      val rejectionHandler = corsRejectionHandler.withFallback(RejectionHandler.default)
+
+      val handleErrors = handleRejections(rejectionHandler) & handleExceptions(exceptionHandler)
 
       val route = {
         val mainRoutes: Route = {
@@ -85,10 +78,12 @@ object WebServer
           new CardApi(module).routes
         }
 
-        handleExceptions(exceptionHandler) {
-          handleRejections(rejectionHandler) {
-            extractRequestContext { ctx =>
-              mainRoutes
+        handleErrors {
+          cors() {
+            handleErrors {
+              extractRequestContext { ctx =>
+                mainRoutes
+              }
             }
           }
         }
