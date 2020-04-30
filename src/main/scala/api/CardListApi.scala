@@ -31,8 +31,7 @@ class CardListApi(
             val result = cardListCommand.add(input.title)
             response(result) { r =>
               respondWithHeaders(
-                `Content-Location`(s"$matchedPath/${r.value.toString}"),
-                RawHeader("Content-Type", "application/json")
+                `Content-Location`(s"$matchedPath/${r.value.toString}")
               ) {
                 complete((StatusCodes.Created, CardListPostOutput(r.value)))
               }
