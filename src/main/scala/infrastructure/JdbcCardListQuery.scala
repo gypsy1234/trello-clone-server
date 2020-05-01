@@ -30,10 +30,7 @@ class JdbcCardListQuery
           }.map { rs => CardListRecord(cl.resultName)(rs) }.list.apply()
 
         results.map { r =>
-          CardListQueryResult(
-            id = UUID.fromString(r.id),
-            title = r.title
-          )
+          buildResult(r)
         }
       }
     }
@@ -51,10 +48,7 @@ class JdbcCardListQuery
 
         Either.fromOption(
           result.map{ r =>
-            CardListQueryResult(
-              id = UUID.fromString(r.id),
-              title = r.title
-            )
+            buildResult(r)
           },
           err(CardListNotFound)
         )
@@ -63,5 +57,12 @@ class JdbcCardListQuery
 }
 
 object JdbcCardListQuery {
+
   val cl: QuerySQLSyntaxProvider[SQLSyntaxSupport[CardListRecord], CardListRecord] = CardListRecord.syntax("cl")
+
+  private def buildResult(r: CardListRecord): CardListQueryResult =
+    CardListQueryResult(
+      id = UUID.fromString(r.id),
+      title = r.title
+    )
 }
