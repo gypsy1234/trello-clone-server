@@ -21,6 +21,7 @@ class CardListApi(
 
   def routes: Route =
     postCardList ~
+      getCardLists ~
       getCardList
 
   def postCardList: Route =
@@ -41,10 +42,20 @@ class CardListApi(
       }
     }
 
+  def getCardLists: Route =
+    path("v1" / "card-lists") {
+      get {
+        val result = cardListQuery.get
+        response(result) { r =>
+          complete((StatusCodes.OK, r))
+        }
+      }
+    }
+
   def getCardList: Route =
     path("v1" / "card-lists" / JavaUUID) { uuid =>
       get {
-        val result = cardListQuery.get(uuid)
+        val result = cardListQuery.getById(uuid)
         response(result) { r =>
           complete((StatusCodes.OK, r))
         }
