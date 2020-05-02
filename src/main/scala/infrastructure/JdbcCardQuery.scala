@@ -36,7 +36,21 @@ class JdbcCardQuery
       }
     }
 
-  override def get(id: UUID)(implicit ec: ExecutionContext): ProcessResult[CardQueryResult] =
+  override def getAll(implicit ec: ExecutionContext): ProcessResult[Seq[CardQueryResult]] =
+    ProcessResult.success {
+      DB readOnly { implicit s =>
+        withSQL {
+          select
+            .from(CardRecord as c)
+            .innerJoin(CardListRecord as cl)
+              .on(c.cardlistid, cl.id)
+        }.map { rs =>
+          buildResult(rs)
+        }.list.apply()
+      }
+    }
+
+  override def getById(id: UUID)(implicit ec: ExecutionContext): ProcessResult[CardQueryResult] =
     ProcessResult {
       DB readOnly { implicit s =>
         val result =

@@ -9,7 +9,8 @@ import scala.concurrent.ExecutionContext
 
 trait CardQuery {
   def getByListId(listId: UUID)(implicit ec: ExecutionContext): ProcessResult[Seq[CardQueryResult]]
-  def get(id: UUID)(implicit ec: ExecutionContext): ProcessResult[CardQueryResult]
+  def getAll(implicit ec: ExecutionContext): ProcessResult[Seq[CardQueryResult]]
+  def getById(id: UUID)(implicit ec: ExecutionContext): ProcessResult[CardQueryResult]
 }
 
 object CardQuery {

@@ -20,7 +20,23 @@ class CardTest extends FlatSpec with Matchers {
     }
   }
 
-  it should "カードの一覧を取得できる" in {
+  it should "カード一覧を取得できる" in {
+    val cardListId1 = postCardList(CardListPostInput("リストタイトル1")).success(_.id)
+    val cardListId2 = postCardList(CardListPostInput("リストタイトル2")).success(_.id)
+    val id1 = postCard(cardListId1, CardPostInput("タイトル1")).success(_.id)
+    val id2 = postCard(cardListId2, CardPostInput("タイトル2")).success(_.id)
+    getCards.success { out =>
+
+      val res1 = out.find(_.id == id1)
+      res1.exists(_.title == "タイトル1") shouldEqual true
+
+      val res2 = out.find(_.id == id2)
+      res2.exists(_.title == "タイトル2") shouldEqual true
+
+    }
+  }
+
+  it should "カードリストに紐づくカード一覧を取得できる" in {
     val cardListId = postCardList(CardListPostInput("リストタイトル")).success(_.id)
     val id1 = postCard(cardListId, CardPostInput("タイトル1")).success(_.id)
     val id2 = postCard(cardListId, CardPostInput("タイトル2")).success(_.id)
