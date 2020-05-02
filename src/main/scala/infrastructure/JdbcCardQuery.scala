@@ -31,12 +31,7 @@ class JdbcCardQuery
             .where
               .eq(cl.id, listId.toString)
         }.map { rs =>
-          CardQueryResult(
-            id = UUID.fromString(rs.string(c.resultName.id)),
-            listId = UUID.fromString(rs.string(cl.resultName.id)),
-            listTitle = rs.string(cl.resultName.title),
-            title = rs.string(c.resultName.title),
-          )
+          buildResult(rs)
         }.list.apply()
       }
     }
@@ -53,12 +48,7 @@ class JdbcCardQuery
               .where
                 .eq(c.id, id.toString)
           }.map { rs =>
-            CardQueryResult(
-              id = UUID.fromString(rs.string(c.resultName.id)),
-              listId = UUID.fromString(rs.string(cl.resultName.id)),
-              listTitle = rs.string(cl.resultName.title),
-              title = rs.string(c.resultName.title),
-            )
+            buildResult(rs)
           }.single.apply()
 
         Either.fromOption(
@@ -70,6 +60,15 @@ class JdbcCardQuery
 }
 
 object JdbcCardQuery {
+
   val c: QuerySQLSyntaxProvider[SQLSyntaxSupport[CardRecord], CardRecord] = CardRecord.syntax("c")
   val cl: QuerySQLSyntaxProvider[SQLSyntaxSupport[CardListRecord], CardListRecord] = CardListRecord.syntax("cl")
+
+  private def buildResult(rs: WrappedResultSet): CardQueryResult =
+    CardQueryResult(
+      id = UUID.fromString(rs.string(c.resultName.id)),
+      listId = UUID.fromString(rs.string(cl.resultName.id)),
+      listTitle = rs.string(cl.resultName.title),
+      title = rs.string(c.resultName.title),
+    )
 }
