@@ -20,6 +20,27 @@ class JdbcCardQuery
 
   import JdbcCardQuery._
 
+  override def getByListId(listId: UUID)(implicit ec: ExecutionContext): ProcessResult[Seq[CardQueryResult]] =
+    ProcessResult.success {
+      DB readOnly { implicit s =>
+        withSQL {
+          select
+            .from(CardRecord as c)
+            .innerJoin(CardListRecord as cl)
+              .on(c.cardlistid, cl.id)
+            .where
+              .eq(cl.id, listId.toString)
+        }.map { rs =>
+          CardQueryResult(
+            id = UUID.fromString(rs.string(c.resultName.id)),
+            listId = UUID.fromString(rs.string(cl.resultName.id)),
+            listTitle = rs.string(cl.resultName.title),
+            title = rs.string(c.resultName.title),
+          )
+        }.list.apply()
+      }
+    }
+
   override def get(id: UUID)(implicit ec: ExecutionContext): ProcessResult[CardQueryResult] =
     ProcessResult {
       DB readOnly { implicit s =>

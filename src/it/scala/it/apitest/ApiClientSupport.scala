@@ -38,6 +38,11 @@ object ApiClientSupport {
       input = input
     )
 
+  def getCards(
+     id: UUID
+   ): ApiTestRequest[_, Seq[CardQueryResult]] =
+    ApiTestRequest.get(s"/v1/card-lists/${id.toString}/cards")
+
   def getCard(
     id: UUID
   ): ApiTestRequest[_, CardQueryResult] =

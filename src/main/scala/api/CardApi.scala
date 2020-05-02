@@ -22,6 +22,7 @@ class CardApi(
 
   def routes: Route =
     postCard ~
+      getCards ~
       getCard
 
   def postCard: Route =
@@ -36,6 +37,16 @@ class CardApi(
               complete((StatusCodes.Created, CardPostOutput(r.value)))
             }
           }
+        }
+      }
+    }
+
+  def getCards: Route =
+    path("v1" / "card-lists" / JavaUUID / "cards") { listId =>
+      get {
+        val result = cardQuery.getByListId(listId)
+        response(result) { r =>
+          complete((StatusCodes.OK, r))
         }
       }
     }
