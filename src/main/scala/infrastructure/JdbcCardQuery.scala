@@ -34,7 +34,7 @@ class JdbcCardQuery
           }.map { rs =>
             CardQueryResult(
               id = UUID.fromString(rs.string(c.resultName.id)),
-              listID = UUID.fromString(rs.string(cl.resultName.id)),
+              listId = UUID.fromString(rs.string(cl.resultName.id)),
               listTitle = rs.string(cl.resultName.title),
               title = rs.string(c.resultName.title),
             )

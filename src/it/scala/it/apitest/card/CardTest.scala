@@ -14,7 +14,7 @@ class CardTest extends FlatSpec with Matchers {
     val id = postCard(listId, CardPostInput("タイトル")).success(_.id)
     getCard(id).success { out =>
       out.id shouldEqual id
-      out.listID shouldEqual listId
+      out.listId shouldEqual listId
       out.listTitle shouldEqual "リストタイトル"
       out.title shouldEqual "タイトル"
     }

@@ -14,7 +14,7 @@ trait CardQuery {
 object CardQuery {
   case class CardQueryResult(
     id: UUID,
-    listID: UUID,
+    listId: UUID,
     listTitle: String,
     title: String
   )
