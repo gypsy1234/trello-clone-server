@@ -28,14 +28,12 @@ class CardApi(
     path("v1" / "card-lists" / JavaUUID / "cards") { listId =>
       post {
         entity(as[CardPostInput]) { input =>
-          extractMatchedPath { matchedPath =>
-            val result = cardCommand.add(CardListId(listId), input.title)
-            response(result) { r =>
-              respondWithHeaders(
-                `Content-Location`(s"$matchedPath/${r.value.toString}")
-              ) {
-                complete((StatusCodes.Created, CardPostOutput(r.value)))
-              }
+          val result = cardCommand.add(CardListId(listId), input.title)
+          response(result) { r =>
+            respondWithHeaders(
+              `Content-Location`(s"/v1/cards/${r.value.toString}") // ToDo ここいい感じにできないか？
+            ) {
+              complete((StatusCodes.Created, CardPostOutput(r.value)))
             }
           }
         }
