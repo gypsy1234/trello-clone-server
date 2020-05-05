@@ -5,9 +5,9 @@ import java.util.UUID
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.headers.{RawHeader, `Content-Location`}
 import akka.http.scaladsl.server.Route
-import api.CardApi.{CardPostInput, CardPostOutput}
+import api.CardApi.{CardPostInput, CardPostOutput, CardPutInput}
 import app.AppModule
-import domain.model.CardListId
+import domain.model.{CardId, CardListId}
 import io.circe.generic.auto._
 
 import scala.concurrent.ExecutionContext
@@ -22,6 +22,7 @@ class CardApi(
 
   def routes: Route =
     postCard ~
+      putCard ~
       getCards ~
       getCard ~
       getCardsByCardList
@@ -37,6 +38,18 @@ class CardApi(
             ) {
               complete((StatusCodes.Created, CardPostOutput(r.value)))
             }
+          }
+        }
+      }
+    }
+
+  def putCard: Route =
+    path("v1" / "cards" / JavaUUID) { id =>
+      put {
+        entity(as[CardPutInput]) { input =>
+          val result = cardCommand.update(CardId(id), input.title, input.position)
+          response(result) { _ =>
+            complete(StatusCodes.NoContent)
           }
         }
       }
@@ -75,5 +88,6 @@ class CardApi(
 
 object CardApi {
   case class CardPostInput(title: String, position: Double)
+  case class CardPutInput(title: String, position: Double)
   case class CardPostOutput(id: UUID)
 }

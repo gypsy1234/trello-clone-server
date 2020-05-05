@@ -2,7 +2,7 @@ package it.apitest
 
 import java.util.UUID
 
-import api.CardApi.{CardPostInput, CardPostOutput}
+import api.CardApi.{CardPostInput, CardPostOutput, CardPutInput}
 import api.CardListApi.{CardListPostInput, CardListPostOutput}
 import app.query.CardListQuery.CardListQueryResult
 import app.query.CardQuery.CardQueryResult
@@ -35,6 +35,15 @@ object ApiClientSupport {
   ): ApiTestRequest[_, CardPostOutput] =
     ApiTestRequest.post[CardPostInput, CardPostOutput](
       path = s"/v1/card-lists/${listId.toString}/cards",
+      input = input
+    )
+
+  def putCard(
+    id: UUID,
+    input: CardPutInput
+  ): ApiTestRequest[_, Unit] =
+    ApiTestRequest.put[CardPutInput, Unit](
+      path = s"/v1/cards/${id.toString}",
       input = input
     )
 

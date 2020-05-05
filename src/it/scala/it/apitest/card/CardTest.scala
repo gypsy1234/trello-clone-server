@@ -1,10 +1,10 @@
 package it.apitest.card
 
-import api.CardApi.CardPostInput
+import api.CardApi.{CardPostInput, CardPutInput}
 import api.CardListApi.CardListPostInput
 import org.scalatest._
 import org.scalatest.matchers.should._
-import it.apitest.ApiClientSupport.{postCard, postCardList, getCard, getCards}
+import it.apitest.ApiClientSupport.{getCard, getCards, postCard, postCardList, putCard}
 
 class CardTest extends FlatSpec with Matchers {
 
@@ -18,6 +18,19 @@ class CardTest extends FlatSpec with Matchers {
       out.listTitle shouldEqual "リストタイトル"
       out.title shouldEqual "タイトル"
       out.position shouldEqual 10D
+    }
+  }
+
+  it should "カードを更新できる" in {
+    val listId = postCardList(CardListPostInput("リストタイトル")).success(_.id)
+    val id = postCard(listId, CardPostInput("タイトル", 10D)).success(_.id)
+    putCard(id, CardPutInput("タイトル2", 20D)).noBody(_ => ())
+    getCard(id).success { out =>
+      out.id shouldEqual id
+      out.listId shouldEqual listId
+      out.listTitle shouldEqual "リストタイトル"
+      out.title shouldEqual "タイトル2"
+      out.position shouldEqual 20D
     }
   }
 
