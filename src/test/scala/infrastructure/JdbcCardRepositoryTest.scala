@@ -4,7 +4,7 @@ import java.util.UUID
 
 import cats.data.EitherT
 import domain.infrastructure.JdbcCardRepository
-import domain.model.{Card, CardId, CardListId, CardTitle}
+import domain.model.{Card, CardId, CardListId, CardPosition, CardTitle}
 import org.scalatest._
 import org.scalatest.matchers.should._
 
@@ -35,7 +35,7 @@ class JdbcCardRepositoryTest
 
   behavior of "JdbcCardRepository"
   it should "登録、取得ができる" in new Fixtures {
-    val card: Card = Card(CardId(UUID.randomUUID()), CardListId(UUID.randomUUID()), CardTitle("タイトル"))
+    val card: Card = Card(CardId(UUID.randomUUID()), CardListId(UUID.randomUUID()), CardTitle("タイトル"), CardPosition(10D))
     val result: EitherT[Future, Errors, Card] =
       for {
         _ <- target.store(card)

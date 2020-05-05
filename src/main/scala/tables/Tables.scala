@@ -18,6 +18,7 @@ object Tables {
       `id` varchar(36) NOT NULL,
       `cardListId` varchar(36) NOT NULL,
       `title` varchar(128) NOT NULL,
+      `position` double NOT NULL,
       PRIMARY KEY (`id`),
       CONSTRAINT `FKCARD_CARDLIST` FOREIGN KEY (`cardListId`) REFERENCES `CardList` (`id`)
     )

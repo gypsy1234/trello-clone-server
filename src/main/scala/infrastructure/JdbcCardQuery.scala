@@ -84,5 +84,6 @@ object JdbcCardQuery {
       listId = UUID.fromString(rs.string(cl.resultName.id)),
       listTitle = rs.string(cl.resultName.title),
       title = rs.string(c.resultName.title),
+      position = rs.double(c.resultName.position)
     )
 }

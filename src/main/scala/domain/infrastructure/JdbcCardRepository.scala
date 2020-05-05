@@ -2,7 +2,7 @@ package domain.infrastructure
 
 import java.util.UUID
 
-import domain.model.{Card, CardId, CardListId, CardRepository, CardTitle}
+import domain.model.{Card, CardId, CardListId, CardPosition, CardRepository, CardTitle}
 import lib.{DBOperation, ProcessResult, UseScalikeJdbc}
 import lib.TypeAlias.ProcessResult
 import cats.syntax.either._
@@ -32,7 +32,8 @@ class JdbcCardRepository
             insert.into(CardRecord).namedValues(
               cCols.id -> card.id.value.toString,
               cCols.cardlistid -> card.listId.value.toString,
-              cCols.title -> card.title.value
+              cCols.title -> card.title.value,
+              cCols.position -> card.position.value
             )
           }
           ()
@@ -52,7 +53,8 @@ class JdbcCardRepository
           Card(
             id = CardId(UUID.fromString(record.id)),
             listId = CardListId(UUID.fromString(record.cardlistid)),
-            title = CardTitle(record.title)
+            title = CardTitle(record.title),
+            position = CardPosition(record.position)
           )
         }
 

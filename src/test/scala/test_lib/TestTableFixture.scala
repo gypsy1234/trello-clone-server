@@ -18,6 +18,7 @@ object TestTableFixture {
       `id` varchar(36) NOT NULL,
       `cardListId` varchar(36) NOT NULL,
       `title` varchar(128) NOT NULL,
+      `position` double NOT NULL,
       PRIMARY KEY (`id`)
     )
     """

@@ -18,6 +18,7 @@ object CardQuery {
     id: UUID,
     listId: UUID,
     listTitle: String,
-    title: String
+    title: String,
+    position: Double
   )
 }

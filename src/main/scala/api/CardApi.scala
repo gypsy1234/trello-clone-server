@@ -30,7 +30,7 @@ class CardApi(
     path("v1" / "card-lists" / JavaUUID / "cards") { listId =>
       post {
         entity(as[CardPostInput]) { input =>
-          val result = cardCommand.add(CardListId(listId), input.title)
+          val result = cardCommand.add(CardListId(listId), input.title, input.position)
           response(result) { r =>
             respondWithHeaders(
               `Content-Location`(s"/v1/cards/${r.value.toString}") // ToDo ここいい感じにできないか？
@@ -74,6 +74,6 @@ class CardApi(
 }
 
 object CardApi {
-  case class CardPostInput(title: String)
+  case class CardPostInput(title: String, position: Double)
   case class CardPostOutput(id: UUID)
 }
