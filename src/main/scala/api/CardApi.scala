@@ -23,7 +23,8 @@ class CardApi(
   def routes: Route =
     postCard ~
       getCards ~
-      getCard
+      getCard ~
+      getCardsByCardList
 
   def postCard: Route =
     path("v1" / "card-lists" / JavaUUID / "cards") { listId =>
